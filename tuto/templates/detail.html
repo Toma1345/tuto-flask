@@ -6,8 +6,13 @@
 {% block content %}
 <h1>{{title}}</h1>
 <div class="sample">
-    {% for b in books %}
+    <h1>{{ b.title }} </h1>
     <img src="{{ url_for('static', filename='images/'+b.img)}}" alt="{{b.title}}" title="{{b.title}}">
-    {% endfor %}
+    <ul>
+        <li>Author : {{ b.author }} </li>
+        <li>Price : {{ b.price }} </li>
+        <li>Url : <a href="{{b.url }}">lien</a></li>
+        
+    </ul>
 </div>
 {% endblock %}
