@@ -1,3 +1,5 @@
+# 5f992707-7166-4249-a52c-954cabaef963
+
 from flask import Flask
 from flask_bootstrap import Bootstrap5
 
@@ -13,3 +15,5 @@ def mkpath(p):
 from flask_sqlalchemy import SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = ('sqlite:///'+mkpath('../myaapp.db'))
 db = SQLAlchemy(app)
+
+app.config['SECRET_KEY'] = "5f992707-7166-4249-a52c-954cabaef963"
