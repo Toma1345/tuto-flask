@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='home.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='home.css')}}">
 {% endblock %}
 {% block content %}
-<h1>{{title}}</h1>
-<div class="sample">
-    {% for b in books %}
-    <img src="{{ url_for('static', filename='images/'+b.img)}}" alt="{{b.title}}" title="{{b.title}}">
-    {% endfor %}
-</div>
-{% endblock %}
+    <div class="sample">
+        {% for x in books %}
+        <img src="{{ url_for('static', filename='images/'+x.image)}}" alt="{{x.title}}" title="{{x.title}}">
+        {% endfor %}
+    </div>
+{% endblock %}  
