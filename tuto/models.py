@@ -1,6 +1,3 @@
-
-
-import yaml, os.path
 from .app import db
 from flask_login import UserMixin
 from .app import login_manager
@@ -17,8 +14,6 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return self.username
     
-
-
 class Author(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String(100))
@@ -39,7 +34,7 @@ class Book(db.Model):
     
 
 def get_sample():
-    return Book.query.limit(10).all() 
+    return Book.query.limit(24).all() 
 
 
 def get_author(id):

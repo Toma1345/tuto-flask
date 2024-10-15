@@ -1,17 +1,11 @@
-from .app import app
-from flask import render_template
-from .models import get_sample, get_author
+from .app import app, db
+from .models import get_sample, get_author, User
+from flask import render_template, url_for, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField
+from flask_login import login_user, logout_user
+from wtforms import StringField, HiddenField, PasswordField
 from wtforms.validators import DataRequired
-from flask import url_for, redirect
-from .app import db
-from wtforms import PasswordField
-from .models import User
 from hashlib import sha256
-from flask_login import login_user, current_user
-from flask import request
-from flask_login import logout_user
 
 class LoginForm(FlaskForm):
     username = StringField('Username')
@@ -29,9 +23,9 @@ class LoginForm(FlaskForm):
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
     name = StringField('Nom', validators=[DataRequired()])
+  
     
-    
-@app.route ("/")
+@app.route ("/sample")
 def sample():
     return render_template(
         "home.html",
