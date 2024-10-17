@@ -1,19 +1,17 @@
-
-
 import click
+import yaml
 from .app import app, db
+from .models import Author, Book, User
+from hashlib import sha256
 
-@app.cli.command()
+@app.cli.command("load_db")
 @click.argument('filename')
 
 def loaddb(filename):
     db.create_all()
     
-    import yaml
-    books = yaml.safe_load(open(filename))
-    
-    from .models import Author, Book
-    
+    with open(filename) as file:
+        books = yaml.load(file, Loader=yaml.Loader)
     
     authors = {}
     for b in books:
@@ -35,20 +33,19 @@ def loaddb(filename):
         db.session.add(o)
     db.session.commit()
     
-@app.cli.command()
+@app.cli.command("sync_db")
 def syncdb():
     '''
         Create all missing tables
     '''
     db.create_all()
     
-@app.cli.command()
+@app.cli.command("new_user")
 @click.argument('username')
 @click.argument('password')
 def newuser(username, password):
     """New user"""
-    from .models import User
-    from hashlib import sha256
+   
     m = sha256()
     m.update(password.encode())
     u = User(username=username, password=m.hexdigest())

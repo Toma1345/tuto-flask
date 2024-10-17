@@ -1,20 +1,18 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="{{url_for('static', filename='home.css')}}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 {% endblock %}
+
 {% block content %}
-    <div class='sample'>
-        <h1>
-            
-            {{b.title}}
-            <img src='{{ url_for('static', filename='images/'+b.image)}}'
-            alt = '{{b.title}}' title = '{{b.title}}'>
-            <ul>
-                <li>Author: {{ b.author }}</li>
-            </ul>
-
-        </h1>
-
-    </div>
+  <h1>{{ title }}</h1>
+  
+  <div class="sample">
+    <img src="{{ url_for('static', filename='images/' + book.image) }}" alt="{{ book.title }}" title="{{ book.title }}">
+    <h1>{{ book.title }}</h1>
+    <a href="{{ url_for('detail_author', id=book.author.id) }}">{{ book.author.name }}</a>
+    <p><i>{{ book.price }}€</i></p>
+    <a href="{{book.url}}">Buy on Amazon</a>
+  </div>
 {% endblock %}
