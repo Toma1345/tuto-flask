@@ -3,7 +3,7 @@ from .models import get_sample, get_author, User, get_book, update_author, del_a
 
 from flask import render_template, url_for, redirect, request
 from flask_wtf import FlaskForm
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 from wtforms import StringField, HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -48,6 +48,30 @@ def detail(id):
     "detail.html",
     book=book)
 
+# Ajoute un livre dans les favoris
+@app.route('/favorite/<int:book_id>', methods=['POST'])
+@login_required
+def add_favorite(book_id):
+    book = get_book(book_id)
+    if book not in current_user.fav_books:
+        current_user.fav_books.append(book)
+        db.session.commit()
+    
+    next_url = request.args.get('next', url_for('detail', id=book_id))
+    return redirect(next_url)
+
+# Supprime un livre des favoris
+@app.route('/unfavorite/<int:book_id>', methods=['POST'])
+@login_required
+def remove_favorite(book_id):
+    book = get_book(book_id)
+    if book in current_user.fav_books:
+        current_user.fav_books.remove(book)
+        db.session.commit()
+        
+    next_url = request.args.get('next', url_for('detail', id=book_id))
+    return redirect(next_url)
+
 @app.route("/authors/<id>")
 def detail_author(id):
     author = get_author(id)
@@ -83,7 +107,6 @@ def delete_author(name:str|None=None):
     else :
         f = DelAuthorForm(name)
     if f.name.data != None:
-        print("view :"+f.name.data)
         del_author(f.name.data)   
         if f.validate_on_submit():
             return redirect(url_for('home')) 
@@ -102,7 +125,6 @@ def delete_books(id:int|None=None):
     else :
         f = DelBookForm(id)
     if f.id.data != None:
-        print("view :"+f.id.data)
         del_book(f.id.data)   
         if f.validate_on_submit():
             return redirect(url_for('home')) 
@@ -128,8 +150,13 @@ def login():
         "login.html",
         form=f)
 
-
 @app.route("/logout/")
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+# Consulte la liste des livres favoris
+@app.route('/favorites')
+@login_required
+def view_favorites():
+    return render_template('favoris.html', books=current_user.fav_books)
