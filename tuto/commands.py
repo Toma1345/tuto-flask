@@ -4,7 +4,7 @@ from .app import app, db
 from .models import Author, Book, User
 from hashlib import sha256
 
-@app.cli.command("load_db")
+@app.cli.command("loaddb")
 @click.argument('filename')
 
 def loaddb(filename):
@@ -33,7 +33,7 @@ def loaddb(filename):
         db.session.add(o)
     db.session.commit()
     
-@app.cli.command("sync_db")
+@app.cli.command("syncdb")
 def syncdb():
     '''
         Create all missing tables

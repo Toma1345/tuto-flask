@@ -6,11 +6,19 @@ from .app import login_manager
 def load_user(username):
     return User.query.get(username)
 
+# tables qui gère l'association entre les favoris et l'user
+favoris = db.Table(
+    'favoris',
+    db.Column('user_id', db.String(50), db.ForeignKey('user.username'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
+)
 
 class User(db.Model, UserMixin):
     username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(64))
     
+    fav_books = db.relationship('Book', secondary=favoris, backref='favorited_by')
+
     def get_id(self):
         return self.username
     
@@ -65,8 +73,6 @@ def get_book(id):
 
 def del_book(ident):
     book = db.session.query(Book).filter_by(id=ident).first()
-    print(book)
     if book:
-        print("suppr")
         db.session.delete(book)
         db.session.commit()
